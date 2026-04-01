@@ -8,13 +8,5 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 @Mod("cobblemon_multiplatform_mdk")
 public class ForgeModExample {
-
-    public ForgeModExample() {
-        NeoForge.EVENT_BUS.register(this);
-    }
-
-    @SubscribeEvent
-    public void onCommandRegistration(RegisterCommandsEvent event) {
-        ExampleCommandRegistry.registerCommands(event.getDispatcher(), event.getBuildContext(), event.getCommandSelection());
-    }
+    public ForgeModExample() {}
 }

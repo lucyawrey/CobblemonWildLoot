@@ -1,5 +1,6 @@
 package com.cobblemon.common.example.mixin;
 
+import com.cobblemon.common.example.ExampleConfig;
 import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
@@ -10,20 +11,25 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.System.*;
 
 @Mixin(PokemonEntity.class)
 public class PokemonEntityTickMixin {
+    @Unique
+    private static final ExampleConfig CONFIG = ExampleConfig.load();
+
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {
-        // 10% drop rate per minute, TODO setup config
-        double dropChance = 0.2 / 1200.0;
+        // 10% drop rate per minute with default config.
+        double dropChance = CONFIG.getDropChance() / CONFIG.getDropCheckTicks();
         double randomNumber = Math.random();
         if (randomNumber < dropChance) {
             PokemonEntity entity = (PokemonEntity) (Object) this;
@@ -40,7 +46,7 @@ public class PokemonEntityTickMixin {
                     if (drops.isEmpty()) return;
 
                     DropEntry drop = drops.get(world.random.nextInt(drops.size()));
-                    if (drop instanceof ItemDropEntry itemDropEntry) {
+                    if (drop instanceof ItemDropEntry itemDropEntry && !Arrays.asList(CONFIG.getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
                         Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
                         if (item != null) {
                             ItemStack stack = new ItemStack(item, 1);
