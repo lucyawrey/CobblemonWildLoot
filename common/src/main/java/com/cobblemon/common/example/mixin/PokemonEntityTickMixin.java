@@ -22,15 +22,17 @@ import static java.lang.System.*;
 public class PokemonEntityTickMixin {
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {
-        PokemonEntity entity = (PokemonEntity) (Object) this;
-        var pokemon = entity.getPokemon();
-        var world = entity.level();
-
+        // 20% drop rate per minute.
+        double dropChance = 1.0 / 1200.0 / 20.0;
         double randomNumber = Math.random();
         if (randomNumber < 0.001) {
-            if (pokemon != null && !pokemon.isFainted()) {
-                if (entity == null) return;
+            PokemonEntity entity = (PokemonEntity) (Object) this;
+            if (entity == null) return;
+            var pokemon = entity.getPokemon();
+            if (pokemon == null) return;
+            var world = entity.level();
 
+            if (!pokemon.isFainted() && !pokemon.isBattleClone() && !pokemon.isNPCOwned() && !pokemon.isUncatchable()) {
                 try {
                     FormData form = pokemon.getForm();
                     DropTable dropTable = form.getDrops();
@@ -38,6 +40,7 @@ public class PokemonEntityTickMixin {
                     if (drops.isEmpty()) return;
 
                     int dropCount = (int)(Math.random() * drops.size());
+                    if (dropCount == 0) return;
                     DropEntry drop = drops.get(dropCount);
                     if (drop instanceof ItemDropEntry itemDropEntry) {
                         Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
