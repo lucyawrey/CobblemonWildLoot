@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "com.cobblemon.common.example.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "mixins": [
+    "PokemonEntityTickMixin"
+  ]
+}
