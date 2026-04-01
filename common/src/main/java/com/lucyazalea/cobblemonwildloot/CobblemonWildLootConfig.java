@@ -1,4 +1,4 @@
-package com.cobblemon.common.example;
+package com.lucyazalea.cobblemonwildloot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,7 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ExampleConfig {
+public class CobblemonWildLootConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final String CONFIG_FILE = "config/CobblemonWildLoot.json";
 
@@ -16,7 +16,7 @@ public class ExampleConfig {
     private double dropChance;
     private String[] itemBlacklist;
 
-    private ExampleConfig() {
+    private CobblemonWildLootConfig() {
         this.dropCheckTicks = Defaults.DROP_CHECK_TICKS;
         this.dropChance = Defaults.DROP_CHANCE;
         this.itemBlacklist = Defaults.ITEM_BLACKLIST;
@@ -42,8 +42,8 @@ public class ExampleConfig {
         return itemBlacklist;
     }
 
-    public static ExampleConfig load() {
-        ExampleConfig config = new ExampleConfig(); // Set defaults
+    public static CobblemonWildLootConfig load() {
+        CobblemonWildLootConfig config = new CobblemonWildLootConfig(); // Set defaults
 
         try (FileReader reader = new FileReader(CONFIG_FILE)) {
             JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
@@ -51,7 +51,7 @@ public class ExampleConfig {
             config.dropChance = json.get("drop_chance_per_minute").getAsFloat();
             config.itemBlacklist = GSON.fromJson(json.get("item_blacklist"), String[].class);
         } catch (IOException e) {
-            config = new ExampleConfig();
+            config = new CobblemonWildLootConfig();
             config.save();
         }
 

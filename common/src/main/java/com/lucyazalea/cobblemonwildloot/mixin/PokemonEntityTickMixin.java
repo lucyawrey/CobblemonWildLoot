@@ -1,6 +1,6 @@
-package com.cobblemon.common.example.mixin;
+package com.lucyazalea.cobblemonwildloot.mixin;
 
-import com.cobblemon.common.example.ExampleConfig;
+import com.lucyazalea.cobblemonwildloot.CobblemonWildLootConfig;
 import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
@@ -24,7 +24,7 @@ import static java.lang.System.*;
 @Mixin(PokemonEntity.class)
 public class PokemonEntityTickMixin {
     @Unique
-    private static final ExampleConfig CONFIG = ExampleConfig.load();
+    private static final CobblemonWildLootConfig CONFIG = CobblemonWildLootConfig.load();
 
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {

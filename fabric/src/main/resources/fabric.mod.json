@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "id": "cobblemon_multiplatform_mdk",
+  "id": "cobblemonwildloot",
   "version": "${version}",
-  "name": "Cobblemon Multi-platform Fabric MDK",
-  "description": "A MDK useful for Fabric Development",
+  "name": "Cobblemon Wild Loot",
+  "description": "Pokémon have a chance to drop items from their loot tables passively, in the wild, your party, or a pasture!",
   "authors": [
-    "The Cobblemon Team"
+    "LucyAzalea"
   ],
   "license": "MIT License",
-  "icon": "assets/example/icon.png",
+  "icon": "assets/todo/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.cobblemon.fabric.example.FabricModExample"
+      "com.lucyazalea.fabric.cobblemonwildloot.FabricModCobblemonWildLoot"
     ]
   },
   "depends": {
@@ -20,6 +20,6 @@
     "cobblemon": ">=1.7.3 <1.8.0"
   },
   "mixins": [
-    "example.mixins.json"
+    "cobblemonwildloot.mixins.json"
   ]
 }
