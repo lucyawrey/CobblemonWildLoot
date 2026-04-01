@@ -22,10 +22,10 @@ import static java.lang.System.*;
 public class PokemonEntityTickMixin {
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {
-        // 20% drop rate per minute.
-        double dropChance = 1.0 / 1200.0 / 20.0;
+        // 10% drop rate per minute, TODO setup config
+        double dropChance = 0.2 / 1200.0;
         double randomNumber = Math.random();
-        if (randomNumber < 0.001) {
+        if (randomNumber < dropChance) {
             PokemonEntity entity = (PokemonEntity) (Object) this;
             if (entity == null) return;
             var pokemon = entity.getPokemon();
@@ -39,9 +39,7 @@ public class PokemonEntityTickMixin {
                     List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
                     if (drops.isEmpty()) return;
 
-                    int dropCount = (int)(Math.random() * drops.size());
-                    if (dropCount == 0) return;
-                    DropEntry drop = drops.get(dropCount);
+                    DropEntry drop = drops.get(world.random.nextInt(drops.size()));
                     if (drop instanceof ItemDropEntry itemDropEntry) {
                         Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
                         if (item != null) {
@@ -51,7 +49,7 @@ public class PokemonEntityTickMixin {
                         }
                     }
                 } catch (Exception e) {
-                    out.println("Error while dropping loot.");
+                    out.println("Error while dropping loot. " + e.toString());
                 }
             }
         }
