@@ -28,15 +28,17 @@ public class PokemonEntityTickMixin {
 
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {
+        PokemonEntity entity = (PokemonEntity) (Object) this;
+        if (entity == null) return;
+        var world = entity.level();
+        if (world == null || world.isClientSide) return;
+
         // 10% drop rate per minute with default config.
         double dropChance = CONFIG.getDropChance() / CONFIG.getDropCheckTicks();
         double randomNumber = Math.random();
         if (randomNumber < dropChance) {
-            PokemonEntity entity = (PokemonEntity) (Object) this;
-            if (entity == null) return;
             var pokemon = entity.getPokemon();
             if (pokemon == null) return;
-            var world = entity.level();
 
             if (!pokemon.isFainted() && !pokemon.isBattleClone() && !pokemon.isNPCOwned() && !pokemon.isUncatchable()) {
                 try {
