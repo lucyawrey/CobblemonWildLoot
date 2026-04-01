@@ -51,11 +51,11 @@ public class PokemonEntityTickMixin {
                         if (item != null) {
                             ItemStack stack = new ItemStack(item, 1);
                             world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
-                            out.println("Dropped item.");
+                            // TODO logging
                         }
                     }
                 } catch (Exception e) {
-                    out.println("Error while dropping loot. " + e.toString());
+                    // TODO logging
                 }
             }
         }
