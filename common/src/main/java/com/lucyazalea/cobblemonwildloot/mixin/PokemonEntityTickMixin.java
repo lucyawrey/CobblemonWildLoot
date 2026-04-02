@@ -7,6 +7,8 @@ import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.FormData;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,12 +51,7 @@ public class PokemonEntityTickMixin {
 
                     DropEntry drop = drops.get(world.random.nextInt(drops.size()));
                     if (drop instanceof ItemDropEntry itemDropEntry && !Arrays.asList(CONFIG.getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
-                        Item item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
-                        if (item != null) {
-                            ItemStack stack = new ItemStack(item, 1);
-                            world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), stack));
-                            // TODO logging
-                        }
+                        itemDropEntry.drop((LivingEntity) entity, (ServerLevel) world, entity.position(), null);
                     }
                 } catch (Exception e) {
                     // TODO logging
