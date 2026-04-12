@@ -37,6 +37,8 @@ dependencies {
         exclude("net.neoforged.fancymodloader", "loader")
     }
 
+    modImplementation("dev.architectury:architectury-neoforge:${property("architectury_api_version")}")
+
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
