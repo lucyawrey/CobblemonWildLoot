@@ -1,5 +1,6 @@
 package com.lucyazalea.cobblemonwildloot.mixin;
 
+import com.lucyazalea.cobblemonwildloot.CobblemonWildLoot;
 import com.lucyazalea.cobblemonwildloot.CobblemonWildLootConfig;
 import com.cobblemon.mod.common.api.drop.DropEntry;
 import com.cobblemon.mod.common.api.drop.DropTable;
@@ -25,9 +26,6 @@ import static java.lang.System.*;
 
 @Mixin(PokemonEntity.class)
 public class PokemonEntityTickMixin {
-    @Unique
-    private static final CobblemonWildLootConfig CONFIG = CobblemonWildLootConfig.load();
-
     @Inject(at = @At("HEAD"), method = "tick")
     public void tick(CallbackInfo ci) {
         PokemonEntity entity = (PokemonEntity) (Object) this;
@@ -36,7 +34,7 @@ public class PokemonEntityTickMixin {
         if (world == null || world.isClientSide) return;
 
         // 10% drop rate per minute with default config.
-        double dropChance = CONFIG.getDropChance() / CONFIG.getDropCheckTicks();
+        double dropChance = CobblemonWildLoot.CONFIG.getDropChance() / CobblemonWildLoot.CONFIG.getDropCheckTicks();
         double randomNumber = Math.random();
         if (randomNumber < dropChance) {
             var pokemon = entity.getPokemon();
@@ -50,7 +48,7 @@ public class PokemonEntityTickMixin {
                     if (drops.isEmpty()) return;
 
                     DropEntry drop = drops.get(world.random.nextInt(drops.size()));
-                    if (drop instanceof ItemDropEntry itemDropEntry && !Arrays.asList(CONFIG.getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
+                    if (drop instanceof ItemDropEntry itemDropEntry && !Arrays.asList(CobblemonWildLoot.CONFIG.getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
                         itemDropEntry.drop((LivingEntity) entity, (ServerLevel) world, entity.position(), null);
                     }
                 } catch (Exception e) {

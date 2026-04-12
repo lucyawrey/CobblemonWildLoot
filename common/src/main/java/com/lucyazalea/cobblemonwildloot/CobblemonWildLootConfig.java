@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,10 +25,8 @@ public class CobblemonWildLootConfig {
 
     public static class Defaults {
         public static final int DROP_CHECK_TICKS = 1200;
-        public static final double DROP_CHANCE = 0.1;
-        public static final String[] ITEM_BLACKLIST = new String[]{
-        };
-        public static final boolean LEGACY_FLATTEN_ITEM_QUANTITY = false;
+        public static final double DROP_CHANCE = 0.07;
+        public static final String[] ITEM_BLACKLIST = new String[]{"minecraft:porkchop", "minecraft:beef", "minecraft:chicken", "minecraft:mutton", "minecraft:rabbit", "minecraft:fish", "minecraft:cooked_porkchop", "minecraft:cooked_beef", "minecraft:cooked_chicken", "minecraft:cooked_mutton", "minecraft:cooked_rabbit", "minecraft:cooked_fish", "minecraft:leather", "minecraft:bone", "minecraft:spider_eye", "minecraft:rotten_flesh", "minecraft:rabbit_hide", "minecraft:rabbit_foot", "minecraft:cod", "minecraft:pufferfish", "minecraft:bone_block", "minecraft:bone_meal", "cobblemon:sharp_beak", "minecraft:honey_bottle", "minecraft:salmon", "minecraft:white_wool"};
     }
 
     public int getDropCheckTicks() {
