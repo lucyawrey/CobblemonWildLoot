@@ -7,12 +7,15 @@ import com.cobblemon.mod.common.api.drop.DropTable;
 import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.FormData;
+import com.lucyazalea.cobblemonwildloot.PokebasketEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -52,7 +55,7 @@ public class PokemonEntityTickMixin {
                         itemDropEntry.drop((LivingEntity) entity, (ServerLevel) world, entity.position(), null);
                     }
                 } catch (Exception e) {
-                    // TODO logging
+                    CobblemonWildLoot.LOGGER.error(e.toString());
                 }
             }
         }

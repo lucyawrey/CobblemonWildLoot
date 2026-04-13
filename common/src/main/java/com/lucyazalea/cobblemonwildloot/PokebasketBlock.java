@@ -61,8 +61,8 @@ public class PokebasketBlock extends BaseEntityBlock implements InteractionEvent
         return new PokebasketEntity(pos, state);
     }
 
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
-        return new PokebasketEntity.Ticker<>();
-    }
+//    @Override
+//    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+//        return new PokebasketEntity.Ticker<>();
+//    }
 }

@@ -49,10 +49,10 @@ public class PokebasketEntity extends BaseContainerBlockEntity {
         return INVENTORY_SIZE;
     }
 
-    public static class Ticker<T extends BlockEntity> implements BlockEntityTicker<T> {
-        @Override
-        public void tick(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-            CobblemonWildLoot.LOGGER.info("Ticker at " + blockPos.toShortString() + " with state " + blockState.toString() + " and entity type " + blockEntity.getClass().getName());
-        }
-    }
+//    public static class Ticker<T extends BlockEntity> implements BlockEntityTicker<T> {
+//        @Override
+//        public void tick(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
+//            CobblemonWildLoot.LOGGER.info("Ticker at " + blockPos.toShortString() + " with state " + blockState.toString() + " and entity type " + blockEntity.getClass().getName());
+//        }
+//    }
 }
