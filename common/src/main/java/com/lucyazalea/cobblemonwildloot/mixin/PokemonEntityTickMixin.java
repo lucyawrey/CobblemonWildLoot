@@ -7,6 +7,8 @@ import com.cobblemon.mod.common.api.drop.ItemDropEntry;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.FormData;
 import com.lucyazalea.cobblemonwildloot.PokebasketEntity;
+import kotlin.random.Random;
+import kotlin.ranges.RangesKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -32,7 +34,7 @@ public class PokemonEntityTickMixin {
         var world = entity.level();
         if (world == null || world.isClientSide) return;
 
-        double dropChance = 12 * CobblemonWildLoot.CONFIG.getDropChance() / CobblemonWildLoot.CONFIG.getDropCheckTicks();
+        double dropChance = CobblemonWildLoot.CONFIG.getDropChance() / CobblemonWildLoot.CONFIG.getDropCheckTicks();
         double randomNumber = Math.random();
         if (randomNumber < dropChance) {
             var pokemon = entity.getPokemon();
@@ -55,9 +57,7 @@ public class PokemonEntityTickMixin {
                             if (blockEntity instanceof PokebasketEntity basket) {
                                 var item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
                                 if (item != null) {
-                                    var range = itemDropEntry.getQuantityRange();
-                                    out.printf("item: %s", itemDropEntry.getItem().toString());
-                                    var quantity = range != null ? world.random.nextInt(range.getStart(), range.getEndInclusive()) : itemDropEntry.getQuantity();
+                                    var quantity = itemDropEntry.getQuantityRange() != null ? RangesKt.random(itemDropEntry.getQuantityRange(), Random.Default) : itemDropEntry.getQuantity();
                                     var stack = new ItemStack(item, quantity);
                                     if (basket.addStack(stack)) {
                                         droppedIntoBasket = true;
@@ -70,7 +70,7 @@ public class PokemonEntityTickMixin {
                         }
                     }
                 } catch (Exception e) {
-                    out.println("Error: " + e.toString());
+                    CobblemonWildLoot.LOGGER.error(e.toString());
                 }
             }
         }
