@@ -8,6 +8,8 @@ import com.google.gson.JsonParser;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class CobblemonWildLootConfig {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -25,7 +27,7 @@ public class CobblemonWildLootConfig {
 
     public static class Defaults {
         public static final int DROP_CHECK_TICKS = 1200;
-        public static final double DROP_CHANCE = 0.07;
+        public static final double DROP_CHANCE = 0.05;
         public static final String[] ITEM_BLACKLIST = new String[]{"minecraft:porkchop", "minecraft:beef", "minecraft:chicken", "minecraft:mutton", "minecraft:rabbit", "minecraft:fish", "minecraft:cooked_porkchop", "minecraft:cooked_beef", "minecraft:cooked_chicken", "minecraft:cooked_mutton", "minecraft:cooked_rabbit", "minecraft:cooked_fish", "minecraft:leather", "minecraft:bone", "minecraft:spider_eye", "minecraft:rotten_flesh", "minecraft:rabbit_hide", "minecraft:rabbit_foot", "minecraft:cod", "minecraft:pufferfish", "minecraft:bone_block", "minecraft:bone_meal", "cobblemon:sharp_beak", "minecraft:honey_bottle", "minecraft:salmon", "minecraft:white_wool"};
     }
 
@@ -37,8 +39,8 @@ public class CobblemonWildLootConfig {
         return dropChance;
     }
 
-    public String[] getItemBlacklist() {
-        return itemBlacklist;
+    public List<String> getItemBlacklist() {
+        return Arrays.asList(itemBlacklist);
     }
 
     public static CobblemonWildLootConfig load() {

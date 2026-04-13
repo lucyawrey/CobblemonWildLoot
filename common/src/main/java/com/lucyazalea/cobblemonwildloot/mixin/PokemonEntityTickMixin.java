@@ -8,6 +8,7 @@ import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
 import com.cobblemon.mod.common.pokemon.FormData;
 import com.lucyazalea.cobblemonwildloot.PokebasketEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,18 +43,28 @@ public class PokemonEntityTickMixin {
                     FormData form = pokemon.getForm();
                     DropTable dropTable = form.getDrops();
                     List<DropEntry> drops = dropTable.getDrops(dropTable.getAmount(), pokemon);
-                    if (drops.isEmpty()) return;
 
+                    if (drops.isEmpty()) return;
                     DropEntry drop = drops.get(world.random.nextInt(drops.size()));
-                    if (drop instanceof ItemDropEntry itemDropEntry && !Arrays.asList(CobblemonWildLoot.CONFIG.getItemBlacklist()).contains(itemDropEntry.getItem().toString())) {
+
+                    if (drop instanceof ItemDropEntry itemDropEntry && !CobblemonWildLoot.CONFIG.getItemBlacklist().contains(itemDropEntry.getItem().toString())) {
                         var droppedIntoBasket = false;
                         BlockPos centerPos = entity.blockPosition();
-                        BlockPos.betweenClosed(centerPos.offset(-10, -10, -10), centerPos.offset(10, 10, 10)).forEach(pos -> {
+                        for (var pos : BlockPos.betweenClosed(centerPos.offset(-12, -12, -12), centerPos.offset(12, 12, 12))) {
                             BlockEntity blockEntity = world.getBlockEntity(pos);
-                            if (blockEntity instanceof PokebasketEntity) {
-                                out.println("Pokebasket!");
+                            if (blockEntity instanceof PokebasketEntity basket) {
+                                var item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
+                                if (item != null) {
+                                    var range = itemDropEntry.getQuantityRange();
+                                    out.printf("item: %s", itemDropEntry.getItem().toString());
+                                    var quantity = range != null ? world.random.nextInt(range.getStart(), range.getEndInclusive()) : itemDropEntry.getQuantity();
+                                    var stack = new ItemStack(item, quantity);
+                                    if (basket.addStack(stack)) {
+                                        droppedIntoBasket = true;
+                                    }
+                                }
                             }
-                        });
+                        }
                         if (!droppedIntoBasket) {
                             itemDropEntry.drop((LivingEntity) entity, (ServerLevel) world, entity.position(), null);
                         }

@@ -7,21 +7,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class PokebasketEntity extends BaseContainerBlockEntity {
 
     public static final int INVENTORY_SIZE = 27;
-    private NonNullList<ItemStack> items;
+    private NonNullList<ItemStack> inventory;
 
     public PokebasketEntity(BlockPos pos, BlockState state) {
         super(CobblemonWildLoot.POKEBASKET_ENTITY.get(), pos, state);
 
-        this.items = NonNullList.withSize(INVENTORY_SIZE, ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(INVENTORY_SIZE, ItemStack.EMPTY);
     }
 
     @Override
@@ -31,12 +28,26 @@ public class PokebasketEntity extends BaseContainerBlockEntity {
 
     @Override
     protected NonNullList<ItemStack> getItems() {
-        return this.items;
+        return this.inventory;
     }
 
     @Override
     protected void setItems(NonNullList<ItemStack> items) {
-        this.items = items;
+        this.inventory = items;
+    }
+
+    public boolean addStack(ItemStack newStack) {
+        for (var i = 0; i < inventory.size(); i++) {
+            var stack = inventory.get(i);
+            if (stack.isEmpty()) {
+                inventory.set(i, newStack);
+                return true;
+            } else if (stack.is(newStack.getItem()) && stack.getCount() + newStack.getCount() < stack.getMaxStackSize()) {
+                inventory.get(i).setCount(stack.getCount() + newStack.getCount());
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
