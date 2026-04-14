@@ -52,7 +52,8 @@ public class PokemonEntityTickMixin {
                     if (drop instanceof ItemDropEntry itemDropEntry && !CobblemonWildLoot.CONFIG.getItemBlacklist().contains(itemDropEntry.getItem().toString())) {
                         var droppedIntoBasket = false;
                         BlockPos centerPos = entity.blockPosition();
-                        for (var pos : BlockPos.betweenClosed(centerPos.offset(-12, -12, -12), centerPos.offset(12, 12, 12))) {
+                        var rad = CobblemonWildLoot.CONFIG.getPokebasketBlockRadius();
+                        for (var pos : BlockPos.betweenClosed(centerPos.offset(-rad, -rad, -rad), centerPos.offset(rad, rad, rad))) {
                             BlockEntity blockEntity = world.getBlockEntity(pos);
                             if (blockEntity instanceof PokebasketEntity basket) {
                                 var item = world.registryAccess().registryOrThrow(Registries.ITEM).get(itemDropEntry.getItem());
