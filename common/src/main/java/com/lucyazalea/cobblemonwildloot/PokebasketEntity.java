@@ -1,14 +1,18 @@
 package com.lucyazalea.cobblemonwildloot;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class PokebasketEntity extends BaseContainerBlockEntity {
 
@@ -22,17 +26,17 @@ public class PokebasketEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    protected Component getDefaultName() {
+    protected @NotNull Component getDefaultName() {
         return Component.translatable("block.cobblemonwildloot.pokebasket");
     }
 
     @Override
-    protected NonNullList<ItemStack> getItems() {
+    protected @NotNull NonNullList<ItemStack> getItems() {
         return this.inventory;
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> items) {
+    protected void setItems(@NotNull NonNullList<ItemStack> items) {
         this.inventory = items;
     }
 
@@ -41,9 +45,11 @@ public class PokebasketEntity extends BaseContainerBlockEntity {
             var stack = inventory.get(i);
             if (stack.isEmpty()) {
                 inventory.set(i, newStack);
+                setChanged();
                 return true;
             } else if (stack.is(newStack.getItem()) && stack.getCount() + newStack.getCount() < stack.getMaxStackSize()) {
                 inventory.get(i).setCount(stack.getCount() + newStack.getCount());
+                setChanged();
                 return true;
             }
         }
@@ -51,7 +57,22 @@ public class PokebasketEntity extends BaseContainerBlockEntity {
     }
 
     @Override
-    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.loadAdditional(tag, registries);
+
+        this.inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(tag, this.inventory, registries);
+    }
+
+    @Override
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(tag, registries);
+
+        ContainerHelper.saveAllItems(tag, this.inventory, registries);
+    }
+
+    @Override
+    protected @NotNull AbstractContainerMenu createMenu(int containerId, @NotNull Inventory inventory) {
         return ChestMenu.threeRows(containerId, inventory, this);
     }
 
@@ -59,11 +80,4 @@ public class PokebasketEntity extends BaseContainerBlockEntity {
     public int getContainerSize() {
         return INVENTORY_SIZE;
     }
-
-//    public static class Ticker<T extends BlockEntity> implements BlockEntityTicker<T> {
-//        @Override
-//        public void tick(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-//            CobblemonWildLoot.LOGGER.info("Ticker at " + blockPos.toShortString() + " with state " + blockState.toString() + " and entity type " + blockEntity.getClass().getName());
-//        }
-//    }
 }
