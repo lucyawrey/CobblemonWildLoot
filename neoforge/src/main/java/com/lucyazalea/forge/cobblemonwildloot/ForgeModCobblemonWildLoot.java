@@ -28,14 +28,18 @@ public class ForgeModCobblemonWildLoot {
     }
 
     public static class SpeciesData {
-        public SpeciesData(String _id, int _dex, DropTable _drops) {
+        public SpeciesData(String _id, int _dex, String _type1, String _type2, DropTable _drops) {
             id = _id;
             dex = _dex;
+            primaryType = _type1;
+            secondaryType = _type2;
             drops = _drops;
         }
 
         public String id;
         public int dex;
+        public String primaryType;
+        public String secondaryType;
         public DropTable drops;
     }
 
@@ -47,7 +51,9 @@ public class ForgeModCobblemonWildLoot {
 
         System.out.println("Total species found: " + speciesList.size());
         for (var species : speciesList) {
-            speciesData.add(new SpeciesData(species.showdownId(), species.getNationalPokedexNumber(), species.getDrops()));
+            var primaryType = species.getPrimaryType().getShowdownId();
+            var secondaryType = species.getSecondaryType() != null ? species.getSecondaryType().getShowdownId() : null;
+            speciesData.add(new SpeciesData(species.showdownId(), species.getNationalPokedexNumber(), primaryType, secondaryType, species.getDrops()));
         }
 
         try (FileWriter writer = new FileWriter("species_drop_data.json")) {
